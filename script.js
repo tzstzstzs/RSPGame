@@ -17,8 +17,6 @@ function playRound(playerSelection, computerSelection) {
     }
 }
 
-// Test the function
-console.log(playRound('Rock', computerPlay()));
 
 document.addEventListener('DOMContentLoaded', function() {
     // Assign button elements to variables
@@ -26,6 +24,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const paperBtn = document.getElementById('paper');
     const scissorsBtn = document.getElementById('scissors');
     const resultDiv = document.getElementById('result');
+    const clearBtn = document.getElementById('clear-button')
+
+    let rounds = 0;
+    let wins = 0;
+    let ties = 0;
+    let losses = 0;
     
     // Add event listeners to buttons
     rockBtn.addEventListener('click', function() {
@@ -43,7 +47,49 @@ document.addEventListener('DOMContentLoaded', function() {
     // Game function
     function playGame(playerChoice) {
         const computerChoice = computerPlay();
+        let computerChoiceSymbol = '...'
         const result = playRound(playerChoice, computerChoice);
         resultDiv.textContent = result;
+
+        rounds++;
+        if (result.includes('Win')) wins++;
+        else if (result.includes('Lose')) losses++;
+        else ties++;
+
+        switch (computerChoice) {
+            case 'Rock':
+                computerChoiceSymbol = '✊';
+                break;
+            case 'Paper':
+                computerChoiceSymbol = '✋';
+                break;
+            case 'Scissors':
+                computerChoiceSymbol = '✌️';
+                break;
+            default:
+                console.error('Invalid computer choice:', computerChoice);
+                return;
+        }
+
+        document.getElementById('computer-choice').textContent = computerChoiceSymbol;
+
+        updateScoreboard();
     }
+
+    function updateScoreboard() {
+        document.getElementById('rounds').textContent = `Rounds: ${rounds}`;
+        document.getElementById('wins').textContent = `Wins: ${wins}`;
+        document.getElementById('ties').textContent = `Ties: ${ties}`;
+        document.getElementById('losses').textContent = `Losses: ${losses}`;
+    }
+
+    function clearCounters() {
+        rounds = 0;
+        wins = 0;
+        ties = 0;
+        losses = 0;
+        updateScoreboard(); // Update the scoreboard to reflect the reset counters
+    }
+
+    clearBtn.addEventListener('click', clearCounters)
 });
